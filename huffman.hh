@@ -8,6 +8,8 @@
 #include <memory>
 #include <vector>
 
+#include "ptrtree.hh"
+
 namespace huffman {
 
 class Huffman {
@@ -44,6 +46,11 @@ class Huffman {
   private:
     struct Impl;
     std::unique_ptr<Impl> pImpl_;
+
+    void recreate_tree();
+    bool compare_trees(const tree::PtrTree& left, const tree::PtrTree& right) const;
+    int frequency(const tree::PtrTree* const tree) const;
+    int frequency(const tree::PtrTree& tree) const;
 };
 
 } // namespace

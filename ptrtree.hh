@@ -22,6 +22,8 @@ class PtrTree : public Tree {
 
     value_t getByPath(const std::string& path) const override;
 
+    void print(int depth) const;
+
   private:
     value_t value_;
     const PtrTree *left_;
