@@ -5,6 +5,8 @@
 #include "huffman.hh"
 
 namespace huffman {
+    constexpr int NUM_VALUES = 257;
+
     struct Huffman::Impl {
         std::unordered_map<symbol_t, int> charFreq;
         std::unique_ptr<tree::PtrTree> tree;
@@ -12,7 +14,7 @@ namespace huffman {
 
     Huffman::Huffman() noexcept {
         pImpl_ = std::unique_ptr<Impl>(new Impl);
-        for (int i = 0; i < 256; i++) {
+        for (int i = 0; i < NUM_VALUES; i++) {
             pImpl_->charFreq[static_cast<symbol_t>(i)] = 0;
         }
         recreate_tree();
@@ -49,7 +51,7 @@ namespace huffman {
             } else {
                 path += "R";
             }
-            if (pImpl_->tree->getByPath(path) < 256) {
+            if (pImpl_->tree->getByPath(path) < NUM_VALUES) {
                 //printf("found a character: %d %c\n(path: %s)\n", pImpl_->tree->getByPath(path),pImpl_->tree->getByPath(path), path.c_str());
                 return_value = pImpl_->tree->getByPath(path);
                 begin = i + 1;
@@ -72,7 +74,7 @@ namespace huffman {
         if (tree->size() == 1) {
             return pImpl_->charFreq[static_cast<Huffman::symbol_t>(tree->getByPath(""))];
         } else {
-            return tree->getByPath("") - 256;
+            return tree->getByPath("") - NUM_VALUES;
         }
     }
 
@@ -95,8 +97,9 @@ namespace huffman {
          * meant because encoded characters always occur at leaf nodes --
          * so they will always have a size of 1. HOWEVER, we also want to
          * be able to use pathTo, which assumes the tree has unique keys.
-         * So to avoid overlap, we'll add 256 to the nodes that represent
-         * frequencies, and reserve 0-255 for only character values. */
+         * So to avoid overlap, we'll add NUM_VALUES (= 257) to the nodes
+         * that represent frequencies, and reserve 0-255 for only character
+         * values. (256 represents the EOF character.) */
 
         /* Unfortunately apparently they are a nightmare to put into
          * a priority queue, since the comparison depends on a member variable,
@@ -122,7 +125,7 @@ namespace huffman {
             forest.pop();
 
             /* combine them into a new tree, and put it back into the forest */
-            tree::PtrTree *newtree = new tree::PtrTree(frequency(tree1) + frequency(tree2) + 256, tree2, tree1);
+            tree::PtrTree *newtree = new tree::PtrTree(frequency(tree1) + frequency(tree2) + NUM_VALUES, tree2, tree1);
             forest.push(newtree);
         }
 
