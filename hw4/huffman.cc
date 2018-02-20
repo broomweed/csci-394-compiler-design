@@ -62,9 +62,16 @@ namespace huffman {
     }
 
     Huffman::encoding_t Huffman::eofCode() const {
-        encoding_t encode;
-        encode.push_back(ZERO);
-        return encode;
+        encoding_t encoding;
+        std::string path = pImpl_->tree->pathTo(NUM_VALUES);
+        for (auto ch : path) {
+            if (ch == 'L') {
+                encoding.push_back(ZERO);
+            } else {
+                encoding.push_back(ONE);
+            }
+        }
+        return encoding;
     }
 
     int Huffman::frequency(const tree::PtrTree* const tree) const {
