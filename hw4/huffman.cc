@@ -141,7 +141,7 @@ namespace huffman {
             forest.pop();
 
             /* combine them into a new tree, and put it back into the forest */
-            tree::PtrTree *newtree = new tree::PtrTree(frequency(tree1) + frequency(tree2) + NUM_VALUES, tree2, tree1);
+            tree::PtrTree *newtree = new tree::PtrTree(frequency(tree1) + frequency(tree2) + NUM_VALUES + 1, tree2, tree1);
             forest.push(newtree);
         }
 
