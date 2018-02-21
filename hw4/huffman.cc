@@ -52,7 +52,6 @@ namespace huffman {
                 path += "R";
             }
             if (pImpl_->tree->getByPath(path) < NUM_VALUES) {
-                //printf("found a character: %d %c\n(path: %s)\n", pImpl_->tree->getByPath(path),pImpl_->tree->getByPath(path), path.c_str());
                 return_value = pImpl_->tree->getByPath(path);
                 begin = i + 1;
                 break;
@@ -108,6 +107,11 @@ namespace huffman {
          * that represent frequencies, and reserve 0-255 for only character
          * values. (256 represents the EOF character.) */
 
+        /* (we don't need to worry about the duplicate keys when talking about
+         * frequencies, because we never look up tree nodes by frequency -- it
+         * only matters that all possible character values are distinct from
+         * any frequency value.) */
+
         /* Unfortunately apparently they are a nightmare to put into
          * a priority queue, since the comparison depends on a member variable,
          * which is apparently anathema to C++. */
@@ -137,6 +141,5 @@ namespace huffman {
         }
 
         pImpl_->tree = std::unique_ptr<tree::PtrTree>(forest.top());
-        //pImpl_->tree->print(0);
     }
 }

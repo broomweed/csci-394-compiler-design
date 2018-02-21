@@ -105,18 +105,4 @@ namespace tree {
         }
     }
 
-    /* this is only for debug purposes!!! */
-    void PtrTree::print(int depth) const {
-        for (int i = 0; i < depth; i++) {
-            printf(" ");
-        }
-        printf("%d\n", getByPath(""));
-        if (left_) {
-            left_->print(depth+1);
-        }
-        if (right_) {
-            right_->print(depth+1);
-        }
-    }
-
 } // namespace tree
