@@ -40,6 +40,9 @@ TEST_CASE("Most frequent symbol encodes shortest", "[compression]") {
 TEST_CASE("Most frequent symbol always encodes to single bit", "[compression]") {
     auto huff = Huffman();
     huff.incFreq(0);
+    //huff.incFreq(1);  <-- Weirdly, adding this line makes the test pass.
+    //                      I have to go to sleep now, it's like 2 am. I might
+    //                      be able to figure this out in the morning.
     huff.incFreq(0);
     REQUIRE(huff.encode(0).size() == 1);
     REQUIRE(huff.encode(1).size() > 1);
