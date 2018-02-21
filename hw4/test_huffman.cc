@@ -40,9 +40,6 @@ TEST_CASE("Most frequent symbol encodes shortest", "[compression]") {
 TEST_CASE("Most frequent symbol always encodes to single bit", "[compression]") {
     auto huff = Huffman();
     huff.incFreq(0);
-    //huff.incFreq(1);  <-- Weirdly, adding this line makes the test pass.
-    //                      I have to go to sleep now, it's like 2 am. I might
-    //                      be able to figure this out in the morning.
     huff.incFreq(0);
     REQUIRE(huff.encode(0).size() == 1);
     REQUIRE(huff.encode(1).size() > 1);
@@ -137,7 +134,8 @@ TEST_CASE("Handling 0-byte correctly", "[null-terminator]") {
     /* Okay... it actually turned out this was a "bug" in the decompress.cc
      * code, where if the sequence ends with a zero byte it doesn't decompress
      * correctly. (due to the early-break-out-of-loop-on-EOF-token thing.)
-     * (So... it's not actually a bug at all.)
+     * (So... it's not actually a bug at all.) I fixed it by changing the
+     * break-out-of-loop condition since we're using a vector.
      * But this thing only surfaces anyway in the case where we have a vector
      * of bytes that happens to end with a \0, since iterating over a c-style
      * string won't give us the \0 anyway so it doesn't matter. Still, I guess
@@ -175,4 +173,3 @@ TEST_CASE("Handling 0-byte correctly", "[null-terminator]") {
     }
     REQUIRE(vec == dec);
 }
-

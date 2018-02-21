@@ -86,7 +86,7 @@ namespace huffman {
          * look it up in the character frequency map; otherwise, just
          * return its key value. */
         if (tree->size() == 1) {
-            return pImpl_->charFreq[static_cast<Huffman::symbol_t>(tree->getByPath(""))];
+            return pImpl_->charFreq[tree->getByPath("")];
         } else {
             return tree->getByPath("") - NUM_VALUES;
         }
