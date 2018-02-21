@@ -12,7 +12,7 @@ namespace tree {
 class PtrTree : public Tree {
   public:
     PtrTree(value_t value);
-    ~PtrTree() = default;
+    ~PtrTree();
     PtrTree(value_t newroot, const PtrTree& left, const PtrTree& right);
     PtrTree(value_t newroot, const PtrTree* const left, const PtrTree* const right);
 

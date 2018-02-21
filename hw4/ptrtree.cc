@@ -37,6 +37,11 @@ namespace tree {
         }
     }
 
+    PtrTree::~PtrTree() {
+        delete left_;
+        delete right_;
+    }
+
     unsigned PtrTree::size() const {
         return size_;
     }

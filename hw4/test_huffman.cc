@@ -100,7 +100,7 @@ TEST_CASE("Random strings decode to the same thing", "[stochastic-decompression]
     srand(time(NULL));
     auto huff = Huffman();
     auto huff2 = Huffman();
-    for (unsigned i = 0; i < 100; ++i) {
+    for (unsigned i = 0; i < 10; ++i) {
         // Generate a random string of length i, encode it, then decode it
         std::vector<Huffman::symbol_t> vec;
         for (unsigned int j = 0; j < i; ++j) {

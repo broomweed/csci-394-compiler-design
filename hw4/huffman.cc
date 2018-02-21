@@ -10,7 +10,7 @@ namespace huffman {
     struct Huffman::Impl {
         std::unordered_map<int, int> charFreq;
         std::unordered_map<const tree::PtrTree*, int> depths;
-        std::unique_ptr<tree::PtrTree> tree;
+        tree::PtrTree *tree;
     };
 
     Huffman::Huffman() noexcept {
@@ -18,6 +18,7 @@ namespace huffman {
         for (int i = 0; i < NUM_VALUES; i++) {
             pImpl_->charFreq[i] = 0;
         }
+        pImpl_->tree = NULL;
         recreate_tree();
     }
 
@@ -153,6 +154,7 @@ namespace huffman {
             forest.push(newtree);
         }
 
-        pImpl_->tree = std::unique_ptr<tree::PtrTree>(forest.top());
+        delete pImpl_->tree;
+        pImpl_->tree = forest.top();
     }
 }
