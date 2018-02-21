@@ -61,7 +61,7 @@ TEST_CASE("Encoded strings decode to the same thing, with EOF", "[decompression]
     teststrs.push_back("‘İki ördek, ekmeğim aldı…♯♭ĸə£łß’"); // unicode works, nice
     teststrs.push_back("\t\r\f\v\n\n\r\v\f\\\"\'\a\u23f2\U1293ac2c");
     for (unsigned i = 0; i < teststrs.size(); ++i) {
-        // Generate a random string of length i, encode it, then decode it
+        // ENCODE
         Huffman::encoding_t enc;
         std::string to_encode = teststrs[i];
         for (auto c : to_encode) {
@@ -100,7 +100,7 @@ TEST_CASE("Random strings decode to the same thing", "[stochastic-decompression]
     srand(time(NULL));
     auto huff = Huffman();
     auto huff2 = Huffman();
-    for (unsigned i = 0; i < 10; ++i) {
+    for (unsigned i = 0; i < 100; ++i) {
         // Generate a random string of length i, encode it, then decode it
         std::vector<Huffman::symbol_t> vec;
         for (unsigned int j = 0; j < i; ++j) {
