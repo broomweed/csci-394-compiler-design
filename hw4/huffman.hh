@@ -48,8 +48,8 @@ class Huffman {
     std::unique_ptr<Impl> pImpl_;
 
     void recreate_tree();
-    int frequency(const tree::PtrTree* const tree) const;
-    int frequency(const tree::PtrTree& tree) const;
+    int weight(const tree::PtrTree* const tree) const;
+    int weight(const tree::PtrTree& tree) const;
 };
 
 } // namespace

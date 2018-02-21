@@ -81,7 +81,7 @@ namespace huffman {
         return encoding;
     }
 
-    int Huffman::frequency(const tree::PtrTree* const tree) const {
+    int Huffman::weight(const tree::PtrTree* const tree) const {
         /* Get the weight of a given tree. If it represents a character,
          * look it up in the character frequency map; otherwise, just
          * return its key value. */
@@ -92,12 +92,12 @@ namespace huffman {
         }
     }
 
-    int Huffman::frequency(const tree::PtrTree& tree) const {
+    int Huffman::weight(const tree::PtrTree& tree) const {
         /* Let it be called not using a pointer, for safety.
          * We need the pointer version sometimes because ptrtree
          * doesn't have a copy constructor so we can't call
-         * frequency(*treeptr) */
-        return frequency(&tree);
+         * weight(*treeptr) */
+        return weight(&tree);
     }
 
     void Huffman::recreate_tree() {
@@ -112,23 +112,23 @@ namespace huffman {
          * values. (256 represents the EOF character.) */
 
         /* (we don't need to worry about the duplicate keys when talking about
-         * frequencies, because we never look up tree nodes by frequency -- it
+         * frequencies, because we never look up tree nodes by weight -- it
          * only matters that all possible character values are distinct from
-         * any frequency value.) */
+         * any weight value.) */
 
         /* Unfortunately apparently they are a nightmare to put into
          * a priority queue, since the comparison depends on a member variable,
          * which is apparently anathema to C++. */
 
         auto compare = [&](const tree::PtrTree* const left, const tree::PtrTree* const right) {
-            if (frequency(left) == frequency(right)) {
+            if (weight(left) == weight(right)) {
                 /* Use tree depth as a "tiebreaker", to cause trees to be
                  * more well-balanced when they have a bunch of zeroes. This
                  * will reduce the length of codes for symbols we're seeing
                  * for the first time. */
                 return pImpl_->depths[left] > pImpl_->depths[right];
             } else {
-                return frequency(left) > frequency(right);
+                return weight(left) > weight(right);
             }
         };
 
@@ -150,7 +150,7 @@ namespace huffman {
             forest.pop();
 
             /* combine them into a new tree, and put it back into the forest */
-            tree::PtrTree *newtree = new tree::PtrTree(frequency(tree1) + frequency(tree2) + NUM_VALUES, tree2, tree1);
+            tree::PtrTree *newtree = new tree::PtrTree(weight(tree1) + weight(tree2) + NUM_VALUES, tree2, tree1);
             pImpl_->depths[newtree] = std::max(pImpl_->depths[tree1], pImpl_->depths[tree2]) + 1;
             forest.push(newtree);
         }
