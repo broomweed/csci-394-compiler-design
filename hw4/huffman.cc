@@ -8,14 +8,14 @@ namespace huffman {
     constexpr int NUM_VALUES = 257;
 
     struct Huffman::Impl {
-        std::unordered_map<symbol_t, int> charFreq;
+        std::unordered_map<int, int> charFreq;
         std::unique_ptr<tree::PtrTree> tree;
     };
 
     Huffman::Huffman() noexcept {
         pImpl_ = std::unique_ptr<Impl>(new Impl);
         for (int i = 0; i < NUM_VALUES; i++) {
-            pImpl_->charFreq[static_cast<symbol_t>(i)] = 0;
+            pImpl_->charFreq[i] = 0;
         }
         recreate_tree();
     }
@@ -51,9 +51,14 @@ namespace huffman {
             } else {
                 path += "R";
             }
-            if (pImpl_->tree->getByPath(path) < NUM_VALUES) {
-                return_value = pImpl_->tree->getByPath(path);
-                begin = i + 1;
+            auto value = pImpl_->tree->getByPath(path);
+            if (value < NUM_VALUES) {
+                if (value == NUM_VALUES-1) {
+                    begin = end;
+                } else {
+                    return_value = value;
+                    begin = i + 1;
+                }
                 break;
             }
         }
@@ -62,7 +67,7 @@ namespace huffman {
 
     Huffman::encoding_t Huffman::eofCode() const {
         encoding_t encoding;
-        std::string path = pImpl_->tree->pathTo(NUM_VALUES);
+        std::string path = pImpl_->tree->pathTo(NUM_VALUES-1);
         for (auto ch : path) {
             if (ch == 'L') {
                 encoding.push_back(ZERO);
