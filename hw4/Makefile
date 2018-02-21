@@ -6,12 +6,18 @@ CXXFLAGS=-g -Og -std=c++17 -Wall -pedantic -Wextra -Werror
 LDFLAGS=$(CXXFLAGS)
 LIBS=
 
-all: test_huffman compress decompress
+all: test_huffman compress decompress bitcompress bitdecompress
 
 compress: compress.o huffman.o ptrtree.o
 	$(CXX) $(LDFLAGS) $(LIBS) -o $@ $^
 
 decompress: decompress.o huffman.o ptrtree.o
+	$(CXX) $(LDFLAGS) $(LIBS) -o $@ $^
+
+bitcompress: bitcompress.o huffman.o ptrtree.o
+	$(CXX) $(LDFLAGS) $(LIBS) -o $@ $^
+
+bitdecompress: bitdecompress.o huffman.o ptrtree.o
 	$(CXX) $(LDFLAGS) $(LIBS) -o $@ $^
 
 test_huffman: test_huffman.o huffman.o ptrtree.o
