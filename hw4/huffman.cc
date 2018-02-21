@@ -29,6 +29,7 @@ namespace huffman {
     }
 
     Huffman::~Huffman() noexcept {
+        delete pImpl_->tree;
     }
 
     Huffman::encoding_t Huffman::encode(symbol_t c) const {
