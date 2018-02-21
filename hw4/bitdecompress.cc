@@ -16,6 +16,10 @@
 using namespace std;
 using namespace huffman;
 
+/* NOTE: small bug: if the original input happened to encode
+ * to something containing byte 10 (newline), this will get
+ * cut off at that point because it only gets one line.
+ * I'll maybe go back and fix this. */
 Huffman::encoding_t string_to_bits(std::string str) {
     Huffman::encoding_t bits;
     for (auto c : str) {
