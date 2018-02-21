@@ -48,7 +48,6 @@ class Huffman {
     std::unique_ptr<Impl> pImpl_;
 
     void recreate_tree();
-    bool compare_trees(const tree::PtrTree& left, const tree::PtrTree& right) const;
     int frequency(const tree::PtrTree* const tree) const;
     int frequency(const tree::PtrTree& tree) const;
 };

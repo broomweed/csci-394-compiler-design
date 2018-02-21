@@ -9,6 +9,7 @@ namespace huffman {
 
     struct Huffman::Impl {
         std::unordered_map<int, int> charFreq;
+        std::unordered_map<const tree::PtrTree*, int> depths;
         std::unique_ptr<tree::PtrTree> tree;
     };
 
@@ -97,10 +98,6 @@ namespace huffman {
         return frequency(&tree);
     }
 
-    bool Huffman::compare_trees(const tree::PtrTree& left, const tree::PtrTree& right) const {
-        return frequency(left) < frequency(right);
-    }
-
     void Huffman::recreate_tree() {
         /* Our PtrTrees only support integers. To get around this, since
          * we're only encoding bytes, we can use numbers from 0-255 to
@@ -122,14 +119,24 @@ namespace huffman {
          * which is apparently anathema to C++. */
 
         auto compare = [&](const tree::PtrTree* const left, const tree::PtrTree* const right) {
-            return frequency(left) > frequency(right);
+            if (frequency(left) == frequency(right)) {
+                /* Use tree depth as a "tiebreaker", to cause trees to be
+                 * more well-balanced when they have a bunch of zeroes. This
+                 * will reduce the length of codes for symbols we're seeing
+                 * for the first time. */
+                return pImpl_->depths[left] > pImpl_->depths[right];
+            } else {
+                return frequency(left) > frequency(right);
+            }
         };
 
         std::priority_queue<tree::PtrTree*, std::vector<tree::PtrTree*>, decltype(compare)> forest(compare);
 
         /* First, we put all the individual nodes into the priority queue. */
         for (auto pair : pImpl_->charFreq) {
-            forest.push(new tree::PtrTree(static_cast<int>(pair.first)));
+            tree::PtrTree *basetree = new tree::PtrTree(static_cast<int>(pair.first));
+            pImpl_->depths[basetree] = 0;
+            forest.push(basetree);
         }
 
         /* Then, we repeat until we only have one tree... */
@@ -141,7 +148,8 @@ namespace huffman {
             forest.pop();
 
             /* combine them into a new tree, and put it back into the forest */
-            tree::PtrTree *newtree = new tree::PtrTree(frequency(tree1) + frequency(tree2) + NUM_VALUES + 1, tree2, tree1);
+            tree::PtrTree *newtree = new tree::PtrTree(frequency(tree1) + frequency(tree2) + NUM_VALUES, tree2, tree1);
+            pImpl_->depths[newtree] = std::max(pImpl_->depths[tree1], pImpl_->depths[tree2]) + 1;
             forest.push(newtree);
         }
 
